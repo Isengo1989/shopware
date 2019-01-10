@@ -44,12 +44,13 @@ class Repository extends ModelRepository
      * @param int|null   $offset
      * @param int|null   $limit
      * @param array|null $filter
+     * @param array|null $orderBy
      *
      * @internal param $blogCategory
      *
      * @return \Doctrine\ORM\Query
      */
-    public function getListQuery($blogCategoryIds, $offset = null, $limit = null, array $filter = null)
+    public function getListQuery($blogCategoryIds, $offset = null, $limit = null, array $filter = null, array $orderBy = null)
     {
         $builder = $this->getListQueryBuilder($blogCategoryIds, $filter);
         if (!empty($offset)) {
@@ -57,6 +58,11 @@ class Repository extends ModelRepository
         }
         if (!empty($limit)) {
             $builder->setMaxResults($limit);
+        }
+
+        //TODO better way to sort?
+        if (!empty($orderBy)) {
+            $builder->orderBy($orderBy['property'], $orderBy['direction']);
         }
 
         return $builder->getQuery();
